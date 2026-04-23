@@ -1,0 +1,41 @@
+{
+  "brandTitle": "半别",
+  "quote": "这里是半别\n一半告别，一半继续\n记录日常，留存思绪",
+  "nav": [
+    {
+      "id": "essay",
+      "label": "随笔",
+      "ornament": "·",
+      "order": 1,
+      "visible": true
+    },
+    {
+      "id": "bits",
+      "label": "絮语",
+      "ornament": "·",
+      "order": 2,
+      "visible": true
+    },
+    {
+      "id": "memo",
+      "label": "小记",
+      "ornament": "·",
+      "order": 3,
+      "visible": true
+    },
+    {
+      "id": "archive",
+      "label": "归档",
+      "ornament": "·",
+      "order": 4,
+      "visible": true
+    },
+    {
+      "id": "about",
+      "label": "关于",
+      "ornament": "·",
+      "order": 5,
+      "visible": true
+    }
+  ]
+}

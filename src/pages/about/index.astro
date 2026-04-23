@@ -1,0 +1,216 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import '../../styles/about.css';
+import { getThemeSettings, type SiteSocialIconKey } from '../../lib/theme-settings';
+const { settings } = getThemeSettings();
+const resolvedSocialItems = settings.site.socialLinks.resolvedSocialItems.filter((item) => item.visible);
+const aboutTitle = settings.page.about.title || '关于';
+const aboutSubtitle = settings.page.about.subtitle;
+
+type SocialActionItem = {
+  key: string;
+  href: string;
+  label: string;
+  title: string;
+  icon: SiteSocialIconKey;
+};
+
+type ContactItem = {
+  key: string;
+  href: string;
+  icon: SiteSocialIconKey;
+  text: string;
+};
+
+const formatExternalLabel = (href: string): string => {
+  try {
+    const parsed = new URL(href);
+    const path = parsed.pathname.replace(/^\/+|\/+$/g, '');
+    return path || parsed.hostname;
+  } catch {
+    return href;
+  }
+};
+
+const socialItems: SocialActionItem[] = [
+  ...resolvedSocialItems.map((item) => ({
+    key: item.id,
+    href: item.href,
+    label: item.label,
+    title: item.label,
+    icon: item.iconKey
+  }))
+];
+
+const contactItems: ContactItem[] = [
+  ...resolvedSocialItems.map((item) => ({
+    key: item.id,
+    href: item.href,
+    icon: item.iconKey,
+    text: item.id === 'email' ? item.href.replace(/^mailto:/i, '') : formatExternalLabel(item.href)
+  }))
+];
+---
+
+<BaseLayout title={aboutTitle} bodyClass="about-page">
+  <div class="page-header page-header--about">
+    <div class="page-heading">
+      <h1 class="page-title">{aboutTitle}</h1>
+      {aboutSubtitle ? <span class="page-subtitle">{aboutSubtitle}</span> : null}
+    </div>
+    {
+      socialItems.length ? (
+        <div class="page-actions">
+          {socialItems.map((item) => (
+            <a class="icon-link" href={item.href} aria-label={item.title} title={item.title}>
+              <Icon name={item.icon} class="icon" />
+            </a>
+          ))}
+        </div>
+      ) : null
+    }
+
+  <p class="about-intro-line">
+    所谓半别，是与世界保持一点温柔的距离。<br>
+
+    不沉溺过去，不盲从喧嚣，在清醒与留恋之间，认真生活，安静书写。<br> <br>
+
+    这里是我的个人博客，用来记录生活碎片、情绪瞬间与零星思考。<br>
+
+    内容涵盖生活随笔、阅读感悟、自我思考与情感记录，不热烈，不张扬，只与自己温和相处。<br>
+
+    人生本就是一场不断告别、又不断前行的旅程。不必决绝，不必圆满，只需半别过往，半赴将来；半别喧嚣，半守本心。<br>
+
+    愿我们在文字里相遇，在半别中，找到属于自己的共鸣与温柔。<br>
+  </p>
+  </div>
+  <div class="about-image" style="margin: 2.5rem 0; text-align: center;">
+    <img 
+      src="/images/about.webp" 
+      alt="关于半别 | 温柔记录生活" 
+      style="border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);"
+    >
+  </div>
+  <h2 class="section-title about-section-title">碎碎念</h2>
+  <p class="about-intro-line">
+    我想用一个网站Blog来记录每天的日常已经很久了<br>
+
+    自己也曾经零零散散写过许多不定时的日记<br>
+
+    却总是因为没有好好收集，最后不知所踪<br>
+
+    那些心情也就随便飘落在某个地方<br>
+
+    等待着莫一天与未来的我再次相遇只是不知当时心境会如何<br>
+
+    似乎总是这样，当停下来回头看之前的种种，总是感慨万千<br>
+
+    会觉得尴尬、会觉得自己傻、也会为自己感动<br>
+
+    但也正是能够停下来回首看一看、想一想，才会有更深沉得思索<br>
+
+    凝练出曾经有口说不出的一种莫名规律<br>
+
+    我也相信，更加详细的点滴记录，会带来更好的效果<br>
+
+    因此我在这里借用网站的形式来帮助我规范<br>
+
+    收集和整理生活中的滴滴点点<br>
+
+    希望多年以后的我再看能够多份微笑、多份感慨
+  </p>
+  <h2 class="section-title about-section-title">栏目指引</h2>
+  <div class="site-guide">
+    <article class="site-guide-item">
+      <div class="site-guide-head">
+        <h3 class="site-guide-title">随笔</h3>
+        <span class="site-guide-link">/essay/</span>
+      </div>
+      <p class="site-guide-desc">文章流列表（含未归档内容）。</p>
+    </article>
+    <article class="site-guide-item">
+      <div class="site-guide-head">
+        <h3 class="site-guide-title">絮语</h3>
+        <span class="site-guide-link">/bits/</span>
+      </div>
+      <p class="site-guide-desc">短内容动态流，碎片想法（支持多图）。</p>
+    </article>
+    <article class="site-guide-item">
+      <div class="site-guide-head">
+        <h3 class="site-guide-title">小记</h3>
+        <span class="site-guide-link">/memo/</span>
+      </div>
+      <p class="site-guide-desc">整理一些值得留存的片刻与回忆。</p>
+    </article>
+    <article class="site-guide-item">
+      <div class="site-guide-head">
+        <h3 class="site-guide-title">归档</h3>
+        <span class="site-guide-link">/archive/</span>
+      </div>
+      <p class="site-guide-desc">按年份分组的归档目录。</p>
+    </article>
+  </div>
+
+  <h2 class="section-title about-section-title">技术栈</h2>
+  <div class="tech-stack">
+    <section class="tech-group">
+      <div class="tech-group-title">构建与渲染</div>
+      <ul class="tech-list">
+        <li class="tech-item">
+          <div class="tech-item-head">
+            <span class="tech-item-title">Astro / Vite</span>
+          </div>
+          <div class="tech-item-desc">内容站点与构建</div>
+        </li>
+        <li class="tech-item">
+          <div class="tech-item-head">
+            <span class="tech-item-title">CSS / 排版</span>
+          </div>
+          <div class="tech-item-desc">排版与阅读体验</div>
+        </li>
+      </ul>
+    </section>
+    <section class="tech-group">
+      <div class="tech-group-title">语言与工具</div>
+      <ul class="tech-list">
+        <li class="tech-item">
+          <div class="tech-item-head">
+            <span class="tech-item-title">TypeScript</span>
+          </div>
+          <div class="tech-item-desc">类型约束与脚本支持</div>
+        </li>
+        <li class="tech-item">
+          <div class="tech-item-head">
+            <span class="tech-item-title">Markdown</span>
+          </div>
+          <div class="tech-item-desc">内容写作与发布流程</div>
+        </li>
+      </ul>
+    </section>
+    
+  </div>
+
+
+  {
+    contactItems.length ? (
+      <>
+        <h2 class="section-title about-section-title">联系与订阅</h2>
+        <section class="contact-block" aria-label="联系方式">
+          <p class="contact-note">如果你有问题、建议，或想订阅更新，可以通过以下方式联系。</p>
+          <ul class="contact-list">
+            {contactItems.map((item) => (
+              <li>
+                <span class="contact-link-head" aria-hidden="true">
+                  <Icon name={item.icon} class="contact-icon" />
+                </span>
+                <a href={item.href}>{item.text}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </>
+    ) : null
+  }
+
+</BaseLayout>

@@ -1,0 +1,46 @@
+{
+  "title": "半别 · 生活随笔与内心思考 | Banbie.com",
+  "description": "半别 BanBie.com，文艺治愈系个人博客，分享生活随笔、内心思考与文字感悟，秉持半别过往、半守本心的态度，安静记录人间日常。",
+  "defaultLocale": "zh-CN",
+  "footer": {
+    "startYear": 2024,
+    "showCurrentYear": true,
+    "copyright": "半别 | Banbie.com 版权所有"
+  },
+  "socialLinks": {
+    "github": null,
+    "x": null,
+    "email": "hi@banbie.com",
+    "presetOrder": {
+      "github": 6,
+      "x": 5,
+      "email": 1
+    },
+    "custom": [
+      {
+        "id": "custom-bilibili",
+        "label": "Bilibili",
+        "href": "https://space.bilibili.com/179947800",
+        "iconKey": "bilibili",
+        "visible": true,
+        "order": 2
+      },
+      {
+        "id": "custom-telegram",
+        "label": "Telegram",
+        "href": "https://t.me/worinixianrenbanban",
+        "iconKey": "telegram",
+        "visible": true,
+        "order": 3
+      },
+      {
+        "id": "custom-instagram",
+        "label": "Instagram",
+        "href": "https://www.instagram.com/gaobanglei/",
+        "iconKey": "instagram",
+        "visible": true,
+        "order": 4
+      }
+    ]
+  }
+}

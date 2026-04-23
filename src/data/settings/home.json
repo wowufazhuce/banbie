@@ -1,0 +1,13 @@
+{
+  "introLead": "这里是我的胡言乱语集散地，取名叫“半别”，名字来自[宋]孙应时的诗 “世事几反覆，人生半别熟。”人生过半，与过往轻别，与当下温柔相处。这里记录所思、所见、所感，留一些文字，给自己，也给同路人。",
+  "introMore": "更多文章请访问",
+  "introMoreLinks": [
+    "archive",
+    "tag"
+  ],
+  "showIntroLead": true,
+  "showIntroMore": true,
+  "heroPresetId": "default",
+  "heroImageSrc": "src/assets/230429fOWv9.webp",
+  "heroImageAlt": "banbie"
+}
