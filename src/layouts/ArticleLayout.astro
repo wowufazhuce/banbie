@@ -5,8 +5,11 @@ import Lightbox from '../components/Lightbox.astro';
 import '../styles/article.css';
 import { getEssayDerivedText, type EssayEntry } from '../lib/content';
 import type { ArticleMetaSettings, SidebarNavId } from '../lib/theme-settings';
-import { formatISODateUtc } from '../utils/format';
+import { formatISODateUtc, createWithBase } from '../utils/format';
 import { truncateText } from '../utils/excerpt';
+
+const base = import.meta.env.BASE_URL ?? '/';
+const withBase = createWithBase(base);
 
 type ArticleNeighborLink = {
   href: string;
@@ -107,8 +110,85 @@ const shouldShowMetaLine = articleMetaSettings.showDate
     ) : null}
   </div>
 
-  <div class="prose">
-    <slot />
+  <div class="article-content-wrapper">
+    <div class="prose">
+      <slot />
+    </div>
+    <div class="article-sidebar-actions">
+      <button class="article-sidebar-action-button" title="分享文章" onclick="shareArticle()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+      </button>
+      <button class="article-sidebar-action-button" title="打赏作者" onclick="showDonateQR()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 分享和打赏的模态框 -->
+  <div id="share-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeModal('share-modal')">&times;</span>
+      <h3>分享文章</h3>
+      <div class="share-options">
+        <p>复制链接：</p>
+        <div class="share-link">
+          <input type="text" id="share-url" value="{Astro.url.href}" readonly>
+          <button onclick="copyShareLink()">复制</button>
+        </div>
+        <p>或通过以下方式分享：</p>
+        <div class="share-buttons">
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(entry.data.title)}`} target="_blank" rel="noopener noreferrer" class="share-button twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+            </svg>
+            Twitter
+          </a>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener noreferrer" class="share-button facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+            Facebook
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="donate-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeModal('donate-modal')">&times;</span>
+      <h3>打赏作者</h3>
+      <p>感谢您的支持！</p>
+      <div class="donate-qr">
+        <p>微信支付：</p>
+        <div class="qr-code">
+            <img src={withBase('/wxqr.jpg')} alt="微信支付二维码" width="240" height="240" style="border-radius: 8px;" />
+          </div>
+          <p class="donate-note">扫描二维码进行打赏，感谢您的支持！</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="article-footer-info">
+    <h3 class="article-footer-info__title">文章信息</h3>
+    <ul class="article-footer-info__list">
+      <li>文章标题：{entry.data.title}</li>
+      <li>文章作者：{entry.data.author || '梦想是混吃等死'}</li>
+      <li>文章链接：<a href={Astro.url.href} target="_blank" rel="noopener noreferrer">{Astro.url.href}</a></li>
+      <li>最后修改：{formatISODateUtc(entry.data.date)}</li>
+    </ul>
+    <div class="article-footer-info__copyright">
+      <p>商业转载请联系站长获得授权，非商业转载请注明本文出处及文章链接，您可以自由地在任何媒体以任何形式复制和分发作品，也可以修改和创作，但是分发衍生作品时必须采用相同的许可协议。</p>
+      <p>本文采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a>进行许可。</p>
+    </div>
   </div>
   {(prev || next) ? (
     <nav class="prev-next" aria-label="上一篇/下一篇">
@@ -156,5 +236,58 @@ const shouldShowMetaLine = articleMetaSettings.showDate
       enablePan: false,
       enableSwipeDownClose: false
     });
+
+    // 分享文章功能
+    window.shareArticle = function() {
+      const modal = document.getElementById('share-modal');
+      if (modal) {
+        modal.classList.add('show');
+        // 自动选中分享链接
+        setTimeout(() => {
+          const shareUrlInput = document.getElementById('share-url');
+          if (shareUrlInput) {
+            shareUrlInput.select();
+          }
+        }, 100);
+      }
+    };
+
+    // 显示打赏二维码
+    window.showDonateQR = function() {
+      const modal = document.getElementById('donate-modal');
+      if (modal) {
+        modal.classList.add('show');
+      }
+    };
+
+    // 关闭模态框
+    window.closeModal = function(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    };
+
+    // 复制分享链接
+    window.copyShareLink = function() {
+      const shareUrlInput = document.getElementById('share-url');
+      if (shareUrlInput) {
+        shareUrlInput.select();
+        document.execCommand('copy');
+        alert('链接已复制到剪贴板！');
+      }
+    };
+
+    // 点击模态框外部关闭
+    window.onclick = function(event) {
+      const shareModal = document.getElementById('share-modal');
+      const donateModal = document.getElementById('donate-modal');
+      if (event.target === shareModal) {
+        shareModal.classList.remove('show');
+      }
+      if (event.target === donateModal) {
+        donateModal.classList.remove('show');
+      }
+    };
   </script>
 </BaseLayout>
